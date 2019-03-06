@@ -14,13 +14,19 @@ Game::Game() : m_window(sf::VideoMode(1280, 720), "yung pong") {};
 
 void Game::Run()
 {
-	m_prevTime = m_clock.getElapsedTime();
+	TPS = 1000 / 1;
+	m_processedTime = m_clock.getElapsedTime().asMilliseconds();
+
 	// Set gamestate to load resources
 	ChangeState(new LoadResourcesState());
 	while (m_window.isOpen())
 	{
-		Update();
 		Render();
+		while ((m_processedTime + TPS) < m_clock.getElapsedTime().asMilliseconds())
+		{
+			Update();
+			m_processedTime += TPS;
+		}
 	}
 }
 
@@ -40,10 +46,6 @@ void Game::ChangeState(GameState* newState)
 
 void Game::Update()
 {
-	m_currentTime = m_clock.getElapsedTime();
-	m_delta = m_prevTime - m_currentTime;
-	m_prevTime = m_currentTime;
-
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
@@ -54,11 +56,12 @@ void Game::Update()
 			m_window.close();
 	}
 
-	m_gameStates.top()->Update(this, m_delta.asMicroseconds);
+	m_gameStates.top()->Update(this);
 }
 
 void Game::Render()
 {
 	m_window.clear();
+	m_gameStates.top()->Render(this);
 	m_window.display();
 }

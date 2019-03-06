@@ -13,9 +13,8 @@ private:
 	sf::RenderWindow m_window;
 	std::stack<GameState*> m_gameStates;
 	sf::Clock m_clock;
-	sf::Time m_prevTime;
-	sf::Time m_currentTime;
-	sf::Time m_delta;
+	float m_processedTime;
+	float TPS;
 public:
 	Game();
 	void Run();
