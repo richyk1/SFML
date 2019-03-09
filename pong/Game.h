@@ -1,6 +1,5 @@
 #pragma once
 class GameState;
-
 class StateManager
 {
 	virtual void ChangeState(GameState* newState) = 0;
@@ -11,8 +10,9 @@ class Game : public StateManager
 {
 private:
 	sf::RenderWindow m_window;
-	std::stack<GameState*> m_gameStates;
 	sf::Clock m_clock;
+	std::stack<GameState*> m_gameStates;
+	std::stack<TextEntity> m_objects;
 	float m_processedTime;
 	float TPS;
 public:

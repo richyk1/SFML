@@ -1,12 +1,11 @@
+#include "Common.h"
 #include "Entity.h"
 
-
-
-Entity::Entity()
+TextEntity::TextEntity(sf::Text& text) : m_text(text)
 {
 }
 
-
-Entity::~Entity()
+void TextEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	target.draw(m_text);
 }

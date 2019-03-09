@@ -1,4 +1,5 @@
 #include "Common.h"
+#include <thread>
 #include "Entity.h"
 #include "GameState.h"
 #include "Game.h"
@@ -7,6 +8,7 @@
 int main()
 {
 	Game().Run();
+
 	return 0;
 }
 
@@ -62,6 +64,12 @@ void Game::Update()
 void Game::Render()
 {
 	m_window.clear();
-	m_gameStates.top()->Render(this);
+	m_objects = m_gameStates.top()->Render();
+	for (int i = 0; i < m_objects.size(); i++)
+	{
+		m_window.draw(m_objects.top());
+		m_objects.pop();
+
+	}
 	m_window.display();
 }
