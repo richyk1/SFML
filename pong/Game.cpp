@@ -12,7 +12,10 @@ int main()
 	return 0;
 }
 
-Game::Game() : m_window(sf::VideoMode(1280, 720), "yung pong") {};
+Game::Game() : Width(1280), Height(720)
+{
+	m_window.create(sf::VideoMode(Width, Height), "yung pong");
+}
 
 void Game::Run()
 {
@@ -23,12 +26,13 @@ void Game::Run()
 	ChangeState(new LoadResourcesState());
 	while (m_window.isOpen())
 	{
-		Render();
+		HandleInput();
 		while ((m_processedTime + TPS) < m_clock.getElapsedTime().asMilliseconds())
 		{
 			Update();
 			m_processedTime += TPS;
 		}
+		Render();
 	}
 }
 
@@ -48,6 +52,23 @@ void Game::ChangeState(GameState* newState)
 
 void Game::Update()
 {
+	m_gameStates.top()->Update(this);
+}
+
+void Game::Render()
+{
+	m_window.clear();
+	m_objects = m_gameStates.top()->Render();
+	for (auto& object : m_objects)
+	{
+		m_window.draw(object);
+	}
+
+	m_window.display();
+}
+
+void Game::HandleInput()
+{
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
@@ -57,19 +78,4 @@ void Game::Update()
 		if (event.type == sf::Event::Closed)
 			m_window.close();
 	}
-
-	m_gameStates.top()->Update(this);
-}
-
-void Game::Render()
-{
-	m_window.clear();
-	m_objects = m_gameStates.top()->Render();
-	for (int i = 0; i < m_objects.size(); i++)
-	{
-		m_window.draw(m_objects.top());
-		m_objects.pop();
-
-	}
-	m_window.display();
 }

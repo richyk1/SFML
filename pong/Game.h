@@ -12,14 +12,16 @@ private:
 	sf::RenderWindow m_window;
 	sf::Clock m_clock;
 	std::stack<GameState*> m_gameStates;
-	std::stack<TextEntity> m_objects;
+	std::vector<TextEntity> m_objects;
 	float m_processedTime;
 	float TPS;
 public:
+	const int Width, Height;
 	Game();
 	void Run();
 	void ChangeState(GameState* newState);
 	void Update();
 	void Render();
+	void HandleInput();
 };
 

@@ -2,9 +2,11 @@
 class TextEntity : public sf::Text
 {
 private:
-public:
 	sf::Text m_text;
-	TextEntity(sf::Text& text);
+	sf::RectangleShape m_border;
+public:
+	void Load(sf::Font& font, std::string string, sf::Color color, sf::Vector2f position);
+	void HorizontalCenter(int windowWidth);
 private:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
