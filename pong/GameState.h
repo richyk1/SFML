@@ -6,11 +6,11 @@ protected:
 	std::vector<TextEntity> m_objects;
 	sf::Font m_font;
 	bool m_done;
-	
 public:
 	GameState();
 	virtual void Enter(Game* const g) = 0;
 	virtual void Update(Game* const g) = 0;
+	void HandleEvents(sf::Event& event, sf::RenderWindow& window);
 	std::vector<TextEntity> Render();
 };
 

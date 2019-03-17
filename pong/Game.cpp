@@ -1,5 +1,6 @@
-#include "Common.h"
-#include <thread>
+#include <iostream>
+#include <stack>
+#include "SFML/Graphics.hpp"
 #include "Entity.h"
 #include "GameState.h"
 #include "Game.h"
@@ -14,24 +15,34 @@ int main()
 
 Game::Game() : Width(1280), Height(720)
 {
-	m_window.create(sf::VideoMode(Width, Height), "yung pong");
+
+	window.create(sf::VideoMode(Width, Height), "yung pong");
 }
 
 void Game::Run()
 {
-	TPS = 1000 / 1;
+	TPS = 1000 / 60;
 	m_processedTime = m_clock.getElapsedTime().asMilliseconds();
 
-	// Set gamestate to load resources
+	// Set gamestate to load resources 
 	ChangeState(new LoadResourcesState());
-	while (m_window.isOpen())
+	
+	while (window.isOpen())
 	{
-		HandleInput();
+		// Handle events
+		while (window.pollEvent(event))
+		{
+			HandleEvents();
+		}
+
+		// Update the game
 		while ((m_processedTime + TPS) < m_clock.getElapsedTime().asMilliseconds())
 		{
 			Update();
 			m_processedTime += TPS;
 		}
+
+		// Render the game
 		Render();
 	}
 }
@@ -57,25 +68,17 @@ void Game::Update()
 
 void Game::Render()
 {
-	m_window.clear();
+	window.clear();
 	m_objects = m_gameStates.top()->Render();
 	for (auto& object : m_objects)
 	{
-		m_window.draw(object);
+		window.draw(object);
 	}
 
-	m_window.display();
+	window.display();
 }
 
-void Game::HandleInput()
+void Game::HandleEvents()
 {
-	sf::Event event;
-	while (m_window.pollEvent(event))
-	{
-		if (event.type == sf::Event::KeyPressed)
-			if (event.key.code == sf::Keyboard::Z)
-				m_window.close();
-		if (event.type == sf::Event::Closed)
-			m_window.close();
-	}
+	m_gameStates.top()->HandleEvents(event, window);
 }

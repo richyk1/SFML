@@ -9,10 +9,10 @@ int main()
 	myGame.Run();
 }
 
-Game::Game() : m_eventHandler(m_window, m_player), m_player(WIDTH, HEIGHT)
+Game::Game() : m_eventHandler(window, m_player), m_player(WIDTH, HEIGHT)
 {
-	m_window.create(sf::VideoMode(WIDTH, HEIGHT), "My window");
-	m_window.setFramerateLimit(30);
+	window.create(sf::VideoMode(WIDTH, HEIGHT), "My window");
+	window.setFramerateLimit(30);
 
 	m_food = Food(WIDTH, HEIGHT);
 	m_food.NewFood();	
@@ -21,7 +21,7 @@ Game::Game() : m_eventHandler(m_window, m_player), m_player(WIDTH, HEIGHT)
 
 void Game::Run()
 {
-	while (m_window.isOpen())
+	while (window.isOpen())
 	{
 		Update();
 		Render();
@@ -42,13 +42,13 @@ void Game::Update()
 
 void Game::Render()
 {
-	m_window.clear();
+	window.clear();
 	// Render all players
 	for (const auto& part : m_player.GetParts())
 	{
-		m_window.draw(part);
+		window.draw(part);
 	}
-	m_window.draw(m_food.GetRectangle());
+	window.draw(m_food.GetRectangle());
 
-	m_window.display();
+	window.display();
 }

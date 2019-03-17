@@ -9,8 +9,9 @@ class StateManager
 class Game : public StateManager
 {
 private:
-	sf::RenderWindow m_window;
+	sf::RenderWindow window;
 	sf::Clock m_clock;
+	sf::Event event;
 	std::stack<GameState*> m_gameStates;
 	std::vector<TextEntity> m_objects;
 	float m_processedTime;
@@ -22,6 +23,6 @@ public:
 	void ChangeState(GameState* newState);
 	void Update();
 	void Render();
-	void HandleInput();
+	void HandleEvents();
 };
 

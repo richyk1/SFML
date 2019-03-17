@@ -6,7 +6,7 @@ class Game
 	float fps;
 	static const int WIDTH = 800;
 	static const int HEIGHT = 600;
-	sf::RenderWindow m_window;
+	sf::RenderWindow window;
 	sf::Clock m_clock;
 	Player m_player;
 	Food m_food;
