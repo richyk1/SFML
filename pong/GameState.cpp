@@ -2,15 +2,16 @@
 #include <stack>
 #include "SFML/Graphics.hpp"
 #include "Entity.h"
+#include "Button.h"
 #include "Game.h"
 #include "GameState.h"
 
 GameState::GameState()
 {
-	m_done = false;
+	mDone = false;
 }
 
-void GameState::HandleEvents(sf::Event& event, sf::RenderWindow& window)
+void GameState::HandleEvents(Game* const g, sf::Event& event, sf::RenderWindow& window)
 {
 	if (event.type == sf::Event::KeyPressed)
 		if (event.key.code == sf::Keyboard::Z)
@@ -19,24 +20,26 @@ void GameState::HandleEvents(sf::Event& event, sf::RenderWindow& window)
 		window.close();
 	if (event.type == sf::Event::MouseButtonPressed)
 	{
-		for (auto& object : m_objects)
+		for (auto& button : mButtons)
 		{
-			if (object.GetBorder().contains(event.mouseButton.x, event.mouseButton.y))
-				if (object.GetString() == "Exit") window.close();
+			if (button->GetBorder().contains(event.mouseButton.x, event.mouseButton.y))
+				if (button->GetString() == "Exit") window.close();
+				else if (button->GetString() == "Start") g->ChangeState(new GamePlayState());
 		}
 	}
 	if (event.type == sf::Event::MouseMoved)
-		for (auto& object : m_objects)
+		for (auto& button : mButtons)
 		{
-			if (object.GetBorder().contains(event.mouseMove.x, event.mouseMove.y))
-				object.SetBorderColor(sf::Color(255, 255, 255, 50));
-			else object.SetBorderColor(sf::Color::Transparent);
+			if (button->GetBorder().contains(event.mouseMove.x, event.mouseMove.y))
+				button->SetBorderColor(sf::Color(255, 255, 255, 50));
+			else button->SetBorderColor(sf::Color::Transparent);
 		}
 }
 
-std::vector<TextEntity> GameState::Render()
+std::pair<std::vector<std::shared_ptr<Entity>>, std::vector<std::shared_ptr<Button>>> GameState::Render()
 {
-	return m_objects;
+	mObjects = std::make_pair(mEntities, mButtons);
+	return mObjects;
 }
 
 LoadResourcesState::LoadResourcesState()
@@ -50,36 +53,41 @@ void LoadResourcesState::Enter(Game* const g)
 
 void LoadResourcesState::Update(Game* const g)
 {
-	m_done = true;
-	if (m_done)
+	mDone = true;
+	if (mDone)
 	{
 		g->ChangeState(new MainMenuState());
 	}
-}
-
-MainMenuState::MainMenuState()
-{
-
 }
 
 void MainMenuState::Enter(Game* const g)
 {
 	std::cout << "Entered MainMenuState" << std::endl;
 
-	m_font.loadFromFile("arial.ttf");
-	m_text.Load(m_font, "Start", sf::Color::Blue, sf::Vector2f(0, 120.f));
-	m_text.HorizontalCenter(g->Width);
-	m_text.CreateBorder();
-	m_objects.emplace_back(m_text);
+	mFont.loadFromFile("arial.ttf");
 
-	m_text.Load(m_font, "Exit", sf::Color::Red, sf::Vector2f(0, 240.f));
-	m_text.HorizontalCenter(g->Width);
-	m_text.CreateBorder();
-	m_objects.emplace_back(m_text);
+	mText.Load(mFont, "Start", sf::Color::Blue, sf::Vector2f(0, 120.f));
+	mText.HorizontalCenter(g->Width);
+	mText.CreateBorder();
+	mButtons.emplace_back(std::make_shared<TextButton>(mText));
 
+	mText.Load(mFont, "Exit", sf::Color::Red, sf::Vector2f(0, 240.f));
+	mText.HorizontalCenter(g->Width);
+	mText.CreateBorder();
+	mButtons.emplace_back(std::make_shared<TextButton>(mText));
 }
 
 void MainMenuState::Update(Game* const g)
 {
 	//std::cout << "Tick!" << std::endl;
+}
+
+void GamePlayState::Enter(Game* const g)
+{
+	std::cout << "Entered GamePlayState" << std::endl;
+	mEntities.emplace_back(std::make_shared<PlayerEntity>(PlayerEntity()));
+}
+
+void GamePlayState::Update(Game* const g)
+{
 }

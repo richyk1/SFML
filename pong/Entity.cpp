@@ -2,50 +2,27 @@
 #include "SFML/Graphics.hpp"
 #include "Entity.h"
 
-
-void TextEntity::Load(sf::Font& font, std::string string, sf::Color color, sf::Vector2f position)
+Entity::Entity()
 {
-	m_text.setFont(font);
-	m_text.setString(string);
-	m_text.setFillColor(color);
-	m_text.setPosition(position);
-	m_text.getLocalBounds();
+
 }
 
-void TextEntity::HorizontalCenter(int windowWidth)
+Entity::~Entity()
 {
-	m_text.setPosition(windowWidth / 2 - (m_text.getLocalBounds().width / 2), m_text.getPosition().y);
+
 }
 
-void TextEntity::CreateBorder()
+PlayerEntity::PlayerEntity()
 {
-	m_border = sf::RectangleShape(sf::Vector2f(m_text.getLocalBounds().width * 2, m_text.getLocalBounds().height * 2));
-	m_border.setPosition(sf::Vector2f(m_text.getPosition().x - (m_text.getLocalBounds().width / 2), m_text.getPosition().y));
-	m_border.setFillColor(sf::Color::Transparent);
-	m_border.setOutlineThickness(1);
+	player.setFillColor(sf::Color::White);
+	player.setSize(sf::Vector2f(20.f, 20.f));
 }
 
-sf::FloatRect TextEntity::GetBorder()
+PlayerEntity::~PlayerEntity()
 {
-	return m_border.getGlobalBounds();
 }
 
-void TextEntity::SetBorderColor(sf::Color color)
+void PlayerEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (m_border.getFillColor() != color)
-	{
-		m_border.setFillColor(color);
-		//std::cout << "Color changed" << std::endl;
-	}
-}
-
-std::string TextEntity::GetString()
-{
-	return m_text.getString().toAnsiString();
-}
-
-void TextEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	target.draw(m_border);
-	target.draw(m_text);
+	target.draw(player);
 }

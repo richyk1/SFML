@@ -13,7 +13,9 @@ private:
 	sf::Clock m_clock;
 	sf::Event event;
 	std::stack<GameState*> m_gameStates;
-	std::vector<TextEntity> m_objects;
+	std::pair<std::vector<std::shared_ptr<Entity>>, std::vector<std::shared_ptr<Button>>> mObjects;
+	std::vector<std::shared_ptr<Entity>> mEntities;
+	std::vector<std::shared_ptr<Button>> mButtons;
 	float m_processedTime;
 	float TPS;
 public:

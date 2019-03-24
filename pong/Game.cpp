@@ -2,6 +2,7 @@
 #include <stack>
 #include "SFML/Graphics.hpp"
 #include "Entity.h"
+#include "Button.h"
 #include "GameState.h"
 #include "Game.h"
 
@@ -69,16 +70,23 @@ void Game::Update()
 void Game::Render()
 {
 	window.clear();
-	m_objects = m_gameStates.top()->Render();
-	for (auto& object : m_objects)
+	mObjects = m_gameStates.top()->Render();
+	mEntities = mObjects.first;
+	mButtons = mObjects.second;
+	for (auto& button : mButtons)
 	{
-		window.draw(object);
+		window.draw(*button);
 	}
+	for (auto& entity : mEntities)
+	{
+		window.draw(*entity);
+	}
+
 
 	window.display();
 }
 
 void Game::HandleEvents()
 {
-	m_gameStates.top()->HandleEvents(event, window);
+	m_gameStates.top()->HandleEvents(this, event, window);
 }
