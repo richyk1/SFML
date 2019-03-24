@@ -16,6 +16,9 @@ void GameState::HandleEvents(Game* const g, sf::Event& event, sf::RenderWindow& 
 	if (event.type == sf::Event::KeyPressed)
 		if (event.key.code == sf::Keyboard::Z)
 			window.close();
+	if (event.type == sf::Event::KeyPressed)
+		if (event.key.code == sf::Keyboard::Escape)
+			window.close();
 	if (event.type == sf::Event::Closed)
 		window.close();
 	if (event.type == sf::Event::MouseButtonPressed)
@@ -85,9 +88,47 @@ void MainMenuState::Update(Game* const g)
 void GamePlayState::Enter(Game* const g)
 {
 	std::cout << "Entered GamePlayState" << std::endl;
-	mEntities.emplace_back(std::make_shared<PlayerEntity>(PlayerEntity()));
+	pPlayerOne = std::make_shared<PlayerEntity>(PlayerEntity());
+	pPlayerOne->Load(sf::Vector2i(g->Width, g->Height));
+
+	pBall = std::make_shared<BallEntity>(BallEntity());
+	pBall->Load(sf::Vector2i(g->Width, g->Height));
+
+	mEntities.emplace_back(pPlayerOne);
+	mEntities.emplace_back(pBall);
 }
 
 void GamePlayState::Update(Game* const g)
 {
+	pPlayerOne->Update();
+
+	for (std::vector<std::shared_ptr<Entity>>::iterator it = mEntities.begin(); it != mEntities.end(); ++it) {
+		/* std::cout << *it; ... */
+		if (*it == pPlayerOne)
+		{
+			mEntities.at(std::distance(mEntities.begin(), it)) = pPlayerOne;
+		}
+	}
+	//mEntities.emplace_back(std::make_shared<PlayerEntity>(mPlayerOne));
+}
+
+void GamePlayState::HandleEvents(Game* const g, sf::Event& event, sf::RenderWindow& window)
+{
+	if (event.type == event.KeyPressed)
+	{
+		switch (event.key.code)
+		{
+		case sf::Keyboard::Escape:
+			window.close();
+			break;
+
+		case sf::Keyboard::W:
+			pPlayerOne->moveUp();
+			break;
+		
+		case sf::Keyboard::S:
+			pPlayerOne->moveDown();
+			break;
+		}
+	}
 }

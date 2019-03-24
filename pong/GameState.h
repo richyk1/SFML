@@ -21,7 +21,7 @@ class LoadResourcesState : public GameState
 public:
 	LoadResourcesState();
 	void Enter(Game* const g);
-void Update(Game* const g);
+	void Update(Game* const g);
 };
 
 
@@ -35,7 +35,10 @@ public:
 
 class GamePlayState : public GameState
 {
+	std::shared_ptr<PlayerEntity> pPlayerOne;
+	std::shared_ptr<BallEntity> pBall;
 public:
 	void Enter(Game* const g);
 	void Update(Game* const g);
+	void HandleEvents(Game* const g, sf::Event& event, sf::RenderWindow& window) override;
 };
