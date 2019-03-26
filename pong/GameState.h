@@ -32,10 +32,11 @@ public:
 	void Enter(Game* const g);
 	void Update(Game* const g);
 };
-
+ 
 class GamePlayState : public GameState
 {
 	std::shared_ptr<PlayerEntity> pPlayerOne;
+	std::shared_ptr<PlayerEntity> pPlayerTwo;
 	std::shared_ptr<BallEntity> pBall;
 public:
 	void Enter(Game* const g);

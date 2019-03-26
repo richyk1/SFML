@@ -5,12 +5,16 @@ protected:
 	sf::RectangleShape mBorder;
 	sf::Vector2f mDirection;
 	sf::Vector2i mScreen;
+
 	int mSpeed;
 public:
 	Entity();
 	virtual ~Entity();
 	virtual void Update() = 0;
 	virtual void Load(sf::Vector2i screen) = 0;
+	virtual bool TouchedWall() = 0;;
+	void moveUp();
+	void moveDown();
 };
 
 class PlayerEntity : public Entity
@@ -21,10 +25,10 @@ private:
 public:
 	PlayerEntity();
 	~PlayerEntity();
-	void moveUp();
-	void moveDown();
 	void Update();
 	void Load(sf::Vector2i screen);
+	bool TouchedWall();
+	bool mIsPlayerTwo;
 };
 
 class BallEntity : public Entity
@@ -37,4 +41,5 @@ public:
 	~BallEntity();
 	void Update();
 	void Load(sf::Vector2i screen);
+	bool TouchedWall();
 };
